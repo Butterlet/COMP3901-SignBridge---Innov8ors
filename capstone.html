@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #ecd1c0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main-container {
+            width: 1400px;
+            height: 800px;
+            background: rgb(193, 226, 235);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 30px;
+        }
+        
+        .left-container {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .right-panel {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 35px;
+        }
+        
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 35px;
+        }
+        
+        .camera-box {
+            width: 100%;
+            height: 450px;
+            background: black;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #videoElement {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            display: none;
+        }
+        
+        .camera-placeholder {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .camera-placeholder p {
+            font-size: 22px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 100px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        #stopBtn {
+            background: #dc3545;
+        }
+        
+        #stopBtn:hover {
+            background: #c82333;
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        select {
+            padding: 12px;
+            border: 1px solid #d6d6d6;
+            border-radius: 6px;
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .output-box {
+            background: white;
+            border: 2px solid #bfcddb;
+            border-radius: 10px;
+            padding: 20px;
+            height: 150px;
+            margin-top: auto;
+        }
+        
+        .output-text {
+            font-size: 26px;
+            color: #333;
+            min-height: 40px;
+        }
+       
+        .asl-img {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .asl-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-container">
+            <h1>ASL Detection System</h1>
+            
+            <div class="camera-box">
+                <video id="videoElement" autoplay playsinline></video>
+                <div class="camera-placeholder" id="cameraPlaceholder">
+                    <p>Camera Feed Here</p>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <select id="cameraSelect">
+                    <option>Select Camera</option>
+                </select>
+                
+                <button id="startBtn">Start</button>
+                <button id="stopBtn" disabled>Stop</button>
+            </div>
+            
+            <div class="output-box">
+                <div class="output-text" id="outputText">Output text shown here</div>
+            </div>
+        </div>
+        
+        <div class="right-panel">
+            <h2>ASL Alphabet Reference</h2>
+            
+            <div class="asl-img">
+                <img src="C:\Users\paris\Desktop\ASL-Alphabet-poster-flashcards.png" alt="ASL Alphabet">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('videoElement');
+        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        
+        let currentStream = null;
+        let detectionActive = false;
+        
+        async function getCameras() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                stream.getTracks().forEach(track => track.stop());
+                
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                
+                cameraSelect.innerHTML = '<option>Select Camera</option>';
+                videoDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Camera ${index + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.log('Camera error:', error);
+            }
+        }
+        
+        async function startCamera() {
+            const deviceId = cameraSelect.value;
+            
+            if (cameraSelect.selectedIndex === 0) {
+                alert('Please select a camera first');
+                return;
+            }
+            
+            try {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
+                
+                const constraints = {
+                    video: {
+                        deviceId: deviceId ? { exact: deviceId } : undefined
+                    }
+                };
+                
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                videoElement.srcObject = currentStream;
+                
+                videoElement.onloadedmetadata = () => {
+                    videoElement.play();
+                    videoElement.style.display = 'block';
+                    cameraPlaceholder.style.display = 'none';
+                    
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    cameraSelect.disabled = true;
+                    
+                    startDetection();
+                };
+                
+            } catch (error) {
+                console.log('Error starting camera:', error);
+                alert('Could not start camera. Please check permissions.');
+            }
+        }
+        
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+            }
+            
+            videoElement.style.display = 'none';
+            cameraPlaceholder.style.display = 'flex';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            cameraSelect.disabled = false;
+            
+            detectionActive = false;
+        }
+        
+        startBtn.addEventListener('click', startCamera);
+        stopBtn.addEventListener('click', stopCamera);
+        
+        getCameras();
+        
+        window.addEventListener('beforeunload', () => {
+            stopCamera();
+        });
+    </script>
+</body>
+</html>
