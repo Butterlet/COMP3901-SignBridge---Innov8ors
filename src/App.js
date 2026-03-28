@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/common/Navbar';
+import HomePage from './pages/HomePage';
+import TranslatorPage from './pages/TranslatorPage';
+import LearningPage from './pages/LearningPage';
+import QuizPage from './pages/QuizPage';
+import HistoryPage from './pages/HistoryPage';
+import ProfilePage from './pages/ProfilePage';
+import Login from './components/auth/Login';
+import Signup from './components/auth/Signup';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app-container">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/translator" element={<TranslatorPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            
+            <Route element={<ProtectedRoute />}>
+              <Route path="/learning" element={<LearningPage />} />
+              <Route path="/quiz" element={<QuizPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
