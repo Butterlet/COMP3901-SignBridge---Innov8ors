@@ -14,24 +14,33 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (formData.email && formData.password) {
-        const mockUser = {
-          id: 1,
-          name: 'John Doe',
-          email: formData.email,
-          level: 'intermediate',
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: formData.email,
+          password: formData.password
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        // Fetch the real user profile after login
+        const profileResponse = await fetch('http://localhost:5000/profile', {
+          credentials: 'include'
+        });
+        const profileData = await profileResponse.json();
+        dispatch(setUser({
+          id: profileData.username,
+          name: `${profileData.first_name} ${profileData.last_name}`,
+          email: profileData.email,
+          level: profileData.jsl_level,
           joinDate: new Date().toISOString()
-        };
-
-        localStorage.setItem('token', 'mock-jwt-token');
-        dispatch(setUser(mockUser));
+        }));
         navigate('/profile');
       } else {
-        setError('Invalid credentials');
+        setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
       setError('Login failed. Please try again.');
