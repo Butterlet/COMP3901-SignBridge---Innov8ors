@@ -25,6 +25,7 @@ const Login = () => {
         })
       });
       const data = await response.json();
+      console.log('Backend response:', response.status, data); 
       if (response.ok) {
         // Fetch the real user profile after login
         const profileResponse = await fetch('http://localhost:5000/profile', {
@@ -38,12 +39,15 @@ const Login = () => {
           level: profileData.jsl_level,
           joinDate: new Date().toISOString()
         }));
+	localStorage.setItem('user', JSON.stringify({ name: `${profileData.first_name} ${profileData.last_name}`, email: profileData.email }));
+	localStorage.setItem('token', 'logged-in');
         navigate('/profile');
       } else {
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      console.error('Login error details'. err);
+      setError(Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -63,7 +67,7 @@ const Login = () => {
         <div className="form-group">
           <label className="form-label">Email</label>
           <input
-            type="email"
+            type="text"
             name="email"
             value={formData.email}
             onChange={handleChange}
