@@ -1,9 +1,11 @@
 // store/slices/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+const savedUser = JSON.parse(localStorage.getItem('user') || 'null');
+
 const initialState = {
-  user: null,
-  isAuthenticated: false,
+  user: savedUser,
+  isAuthenticated: !!savedUser,
   loading: false,
   error: null,
   progress: {
@@ -23,6 +25,7 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
       // Initialize progress from user data if it exists
+      localStorage.setItem('user', JSON.stringify(action.payload));
       if (action.payload.progress) {
         state.progress = action.payload.progress;
       }
@@ -31,6 +34,8 @@ const userSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.progress = initialState.progress;
+      localStorage.removeItem('user');  
+      localStorage.removeItem('token');
     },
     updateProgress: (state, action) => {
       // Update progress in both state.progress and state.user.progress
