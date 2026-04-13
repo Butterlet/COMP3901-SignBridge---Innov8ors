@@ -46,8 +46,8 @@ const Login = () => {
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
-      console.error('Login error details'. err);
-      setError(Login failed. Please try again.');
+      console.error('Login error details', err);
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
