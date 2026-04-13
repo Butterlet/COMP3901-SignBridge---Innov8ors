@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Request interceptor to add auth token
@@ -56,10 +57,9 @@ export const submitQuizResult = async (resultData) => {
   }
 };
 
-// User APIs
 export const getUserProfile = async () => {
   try {
-    const response = await api.get('/user/profile');
+    const response = await api.get('/profile');
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -73,6 +73,27 @@ export const updateUserProgress = async (progressData) => {
     return response.data;
   } catch (error) {
     console.error('Error updating progress:', error);
+    throw error;
+  }
+};
+
+// Auth APIs
+export const signupUser = async (userData) => {
+  try {
+    const response = await api.post('/signup', userData);
+    return response.data;
+  } catch (error) {
+    console.error('Signup error:', error);
+    throw error;
+  }
+};
+
+export const loginUser = async (credentials) => {
+  try {
+    const response = await api.post('/login', credentials);
+    return response.data;
+  } catch (error) {
+    console.error('Login error:', error);
     throw error;
   }
 };
