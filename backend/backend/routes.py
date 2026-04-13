@@ -65,7 +65,7 @@ def login():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
     if user and user.check_password(data['password']):
-        login_user(user)
+        login_user(user, remember=True)
         return jsonify({"message": "Login successful!"})
     return jsonify({"message": "Invalid credentials"}), 401
 
