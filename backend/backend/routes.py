@@ -50,3 +50,25 @@ def signup():
             'jsl_level': jsl_level
         }
     }), 201
+
+@auth.route('/profile', methods=['GET'])
+def profile():
+    if 'user_id' not in session:
+        return jsonify({'message': 'Not authenticated'}), 401
+
+    user = db.find_user_by_id(session['user_id'])
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    return jsonify({
+        'username': user['email'],
+        'first_name': user['first_name'],
+        'last_name': user['last_name'],
+        'email': user['email'],
+        'jsl_level': user['jsl_level'],
+        'progress': user.get('progress', {
+            'quizzesTaken': 0,
+            'averageScore': 0,
+            'signsLearned': 0
+        })
+    })
