@@ -8,82 +8,45 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/signup', methods=['POST'])
 def signup():
-    data = request.json
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    jsl_level = data.get('jsl_level')
 
-    # 1. Required fields check
-    required_fields = ["first_name", "last_name", "date_of_birth", "jsl_level", "username", "email", "password"]
-    for field in required_fields:
-        if field not in data or not data[field]:
-            return jsonify({"error": f"{field} is required"}), 400
+    # Basic validation
+    if not email or not password or len(password) < 6:
+        return jsonify({'message': 'Invalid input'}), 400
 
-    # 2. Password length
-    if len(data["password"]) < 8:
-        return jsonify({"error": "Password must be at least 8 characters"}), 400
+    # Check if user already exists
+    existing_user = db.find_user_by_email(email)  # implement this
+    if existing_user:
+        return jsonify({'message': 'Email already registered'}), 409
 
-    # 3. Email format
-    import re
-    email_pattern = r"[^@]+@[^@]+\.[^@]+"
-    if not re.match(email_pattern, data["email"]):
-        return jsonify({"error": "Invalid email format"}), 400
+    # Hash the password
+    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    # 4. JSL level restriction
-    valid_levels = ["Beginner", "Intermediate", "Advanced"]
-    if data["jsl_level"] not in valid_levels:
-        return jsonify({"error": "Invalid JSL level"}), 400
-
-    # 5. Convert date string to Python date
-    from datetime import datetime
-    try:
-        dob = datetime.strptime(data['date_of_birth'], "%Y-%m-%d").date()
-    except ValueError:
-        return jsonify({"error": "Date of birth must be YYYY-MM-DD"}), 400
-
-    # 6. Check if username/email already exists
-    if User.query.filter_by(username=data["username"]).first():
-        return jsonify({"error": "Username already taken"}), 400
-    if User.query.filter_by(email=data["email"]).first():
-        return jsonify({"error": "Email already registered"}), 400
-
-    # If all checks pass, create user
-    user = User(
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        date_of_birth=dob,
-        jsl_level=data['jsl_level'],
-        username=data['username'],
-        email=data['email']
-    )
-    user.set_password(data['password'])
-    db.session.add(user)
-    db.session.commit()
-
-    return jsonify({"message": "Account created successfully!"})
-
-
-@auth.route('/login', methods=['POST'])
-def login():
-    data = request.json
-    user = User.query.filter_by(username=data['username']).first()
-    if user and user.check_password(data['password']):
-        login_user(user, remember=True)
-        return jsonify({"message": "Login successful!"})
-    return jsonify({"message": "Invalid credentials"}), 401
-
-@auth.route('/', methods=['GET'])
-def home():
-    return jsonify({"message": "Welcome to SignBridge backend!"})
-
-from flask_login import login_required, current_user
-
-@auth.route('/profile', methods=['GET'])
-@login_required
-def profile():
-    return jsonify({
-        "first_name": current_user.first_name,
-        "last_name": current_user.last_name,
-        "username": current_user.username,
-        "date_of_birth": str(current_user.date_of_birth), # convert date
-        "jsl_level": current_user.jsl_level,
-        "email": current_user.email
+    # Create user in database
+    new_user = db.create_user({
+        'username': email,
+        'email': email,
+        'password_hash': hashed.decode('utf-8'),
+        'first_name': first_name,
+        'last_name': last_name,
+        'jsl_level': jsl_level,
+        'created_at': datetime.utcnow()
     })
 
+    # Create a session (so user is logged in automatically)
+    session['user_id'] = new_user['id']
+    session.permanent = True
+
+    return jsonify({
+        'message': 'User created successfully',
+        'user': {
+            'id': new_user['id'],
+            'email': email,
+            'jsl_level': jsl_level
+        }
+    }), 201
