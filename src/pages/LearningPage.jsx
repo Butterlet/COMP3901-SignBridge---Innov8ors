@@ -18,8 +18,8 @@ const LearningPage = () => {
     {
       id: 2,
       title: "🔢 Numbers",
-      description: "Master counting from 1 to 10 in JSL",
-      topics: ["1-10"],
+      description: "Master counting from 1 to 9 in JSL",
+      topics: ["1-9"],
       resourceUrl: "#",
       difficulty: "Beginner",
     },

@@ -113,8 +113,8 @@ const SHEETS = {
   },
   2: {
     title: "Numbers Practice Sheet",
-    description: "Practice counting and signing numbers 1–10.",
-    items: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+    description: "Practice counting and signing numbers 1–9.",
+    items: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
   },
   3: {
     title: "Basic Greetings Practice Sheet",
