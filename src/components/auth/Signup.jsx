@@ -38,7 +38,7 @@ const Signup = () => {
       return;
     }
 
-    // Date of birth required and should be ISO yyyy-mm-dd (browser date input provides this)
+    // Date of birth is required and should be yyyy-mm-dd 
     if (!formData.date_of_birth) {
       setError("Please enter your date of birth");
       return;

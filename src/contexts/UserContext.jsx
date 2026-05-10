@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   );
 
   useEffect(() => {
-    // If we don't have a full user object but have a session, try fetching profile
+    // If we don't have a full user object but have a session, lets try fetching profile
     const loadProfile = async () => {
       if (!user) return;
       if (!user.id) return;
@@ -43,7 +43,7 @@ export const UserProvider = ({ children }) => {
       }
     };
     loadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   const setUser = (u) => {

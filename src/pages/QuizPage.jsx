@@ -5,6 +5,7 @@ import {
   submitQuizResult,
   updateUserProgress as apiUpdateUserProgress,
 } from "../services/api";
+
 import letA from "../assets/A.png";
 import letB from "../assets/B.png";
 import letC from "../assets/C.png";
@@ -32,7 +33,6 @@ import letX from "../assets/X.png";
 import letY from "../assets/Y.png";
 import letZ from "../assets/Z.png";
 
-// Number imports
 import num1 from "../assets/1.png";
 import num2 from "../assets/2.png";
 import num3 from "../assets/3.png";
@@ -198,7 +198,7 @@ const QuizPage = () => {
         console.error("Failed to update user progress:", err);
       }
 
-      // Update context (optimistic)
+      // Update context
       updateProgress(progressPayload);
 
       setScore(finalScore);

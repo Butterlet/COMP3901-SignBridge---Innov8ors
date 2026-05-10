@@ -1,9 +1,5 @@
 /* src/styles/main.css */
 
-/* ============================================
-   RESET & BASE STYLES
-   ============================================ */
-
 * {
   margin: 0;
   padding: 0;
@@ -20,9 +16,7 @@ body {
   color: #1f2937;
 }
 
-/* ============================================
-   LAYOUT
-   ============================================ */
+/* LAYOUT */
 
 .app-container {
   min-height: 100vh;
@@ -41,9 +35,7 @@ body {
   padding: 0 1rem;
 }
 
-/* ============================================
-   NAVIGATION
-   ============================================ */
+/* NAVIGATION */
 
 .navbar {
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -121,9 +113,7 @@ body {
   cursor: pointer;
 }
 
-/* ============================================
-   CARDS & CONTAINERS
-   ============================================ */
+/*  CARDS & CONTAINERS */
 
 .card {
   background: white;
@@ -151,9 +141,7 @@ body {
   margin-bottom: 1rem;
 }
 
-/* ============================================
-   BUTTONS
-   ============================================ */
+/* BUTTONS */
 
 .btn {
   display: inline-flex;
@@ -200,9 +188,7 @@ body {
   background-color: #dc2626;
 }
 
-/* ============================================
-   HERO SECTION
-   ============================================ */
+/* HERO SECTION */
 
 .hero {
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -239,9 +225,7 @@ body {
   margin-right: auto;
 }
 
-/* ============================================
-   FORMS
-   ============================================ */
+/* FORMS */
 
 .form-container {
   max-width: 28rem;
@@ -297,9 +281,7 @@ body {
   border: 1px solid #fecaca;
 }
 
-/* ============================================
-   GRID LAYOUTS
-   ============================================ */
+/* GRID LAYOUTS */
 
 .grid-3 {
   display: grid;
@@ -315,9 +297,7 @@ body {
   margin-bottom: 3rem;
 }
 
-/* ============================================
-   HOW IT WORKS SECTION
-   ============================================ */
+/*  HOW IT WORKS SECTION */
 
 .how-it-works {
   background-color: #f9fafb;
@@ -367,9 +347,7 @@ body {
   color: #6b7280;
 }
 
-/* ============================================
-   STATS
-   ============================================ */
+/* STATS */
 
 .stat-card {
   background: white;
@@ -389,9 +367,7 @@ body {
   color: #6b7280;
 }
 
-/* ============================================
-   CTA SECTION
-   ============================================ */
+/*  CTA SECTION */
 
 .cta-section {
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
@@ -412,9 +388,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* ============================================
-   CAMERA VIEW
-   ============================================ */
+/* TEMPORARY CAMERA VIEW */
 
 .camera-container {
   background: white;
@@ -465,9 +439,7 @@ body {
   color: #374151;
 }
 
-/* ============================================
-   QUIZ & FLASHCARDS
-   ============================================ */
+/* QUIZZES & FLASHCARDS  */
 
 .quiz-container {
   max-width: 42rem;
@@ -516,9 +488,7 @@ body {
   border-color: #3b82f6;
 }
 
-/* ============================================
-   PROFILE PAGE
-   ============================================ */
+/* PROFILE PAGE */
 
 .profile-card {
   background: white;
@@ -577,9 +547,7 @@ body {
   border-radius: 9999px;
 }
 
-/* ============================================
-   HISTORY PAGE
-   ============================================ */
+/* HISTORY PAGE */
 
 .history-section {
   background: white;
@@ -618,9 +586,7 @@ body {
   font-weight: bold;
 }
 
-/* ============================================
-   LEARNING PAGE
-   ============================================ */
+/* LEARNING PAGE */
 
 .learning-header {
   text-align: center;
@@ -692,52 +658,7 @@ body {
   color: #991b1b;
 }
 
-/* ============================================
-   UTILITIES
-   ============================================ */
 
-.text-center {
-  text-align: center;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-.mb-2 {
-  margin-bottom: 0.5rem;
-}
-.mb-3 {
-  margin-bottom: 0.75rem;
-}
-.mb-4 {
-  margin-bottom: 1rem;
-}
-.mb-6 {
-  margin-bottom: 1.5rem;
-}
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
-}
-.mt-4 {
-  margin-top: 1rem;
-}
-
-.p-2 {
-  padding: 0.5rem;
-}
-.p-4 {
-  padding: 1rem;
-}
-.p-6 {
-  padding: 1.5rem;
-}
-.p-8 {
-  padding: 2rem;
-}
 
 /* ============================================
    RESPONSIVE
