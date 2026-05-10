@@ -43,6 +43,10 @@ import num7 from "../assets/7.png";
 import num8 from "../assets/8.png";
 import num9 from "../assets/9.png";
 
+import GoodDayGif from "../assets/good-day.gif";
+import WhatIsThatGif from "../assets/what-is-that.gif";
+import WhatTimeIsItGif from "../assets/what-time-is-it.gif";
+
 const QuizPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, progress, updateProgress } = useUser();
@@ -113,11 +117,11 @@ const QuizPage = () => {
       description: "Test your knowledge of common greetings and phrases",
       icon: "👋",
       difficulty: "Beginner",
-      questions: 10,
+      questions: 3,
       flashcards: [
-        { id: 1, image: " ", options: [""], correct: 0 },
-        { id: 2, image: " ", options: [""], correct: 0 },
-        { id: 3, image: " ", options: [""], correct: 2 },
+        { id: 1, image: WhatTimeIsItGif, options: ["What time is it", "How are you?", "What is that?", "What is your name"], correct: 0 },
+        { id: 2, image: GoodDayGif, options: ["Where are you?", "I am fine", "Good day", "How are you?"], correct: 2 },
+        { id: 3, image: WhatIsThatGif, options: ["What are you doing?", "What time is it?", "Who are you?", "What is that?"], correct: 3 },
       ],
     },
     {
