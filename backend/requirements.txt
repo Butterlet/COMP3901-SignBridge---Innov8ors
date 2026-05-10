@@ -1,0 +1,6 @@
+flask
+flask_bcrypt
+flask-cors
+python-dotenv
+supabase
+flask_login
